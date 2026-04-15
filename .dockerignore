@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+polyglot.jpg
+polyglot.png
+.git
+.gitignore
