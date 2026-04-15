@@ -24,5 +24,15 @@ This project demonstrates how a polyglot file can exploit improper file upload v
    - Cookies displayed
    - Terminal logs data
 
+
+
+## Docker Usage
+
+### Build
+docker build -t polyglot-demo .
+
+### Run
+docker run -it -p 5000:5000 -v ${PWD}:/app polyglot-demo
+
 ## Disclaimer
 This project is for educational purposes only.
